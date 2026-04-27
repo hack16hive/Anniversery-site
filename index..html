@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="icon" type="image/mpeg" href="photo2.jpg">
+  <title>Love is in the Air</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Cormorant+Garamond:wght@300;400;600&display=swap" rel="stylesheet"/>
+
+  <style>
+    /* =============================================
+       CSS VARIABLES — Edit colors & fonts here
+    ============================================= */
+    :root {
+      --bg:           #0d0a0e;          /* Page background */
+      --gold:         #c9a96e;          /* Primary accent */
+      --gold-light:   #e8d5b0;          /* Lighter accent */
+      --rose:         #c06070;          /* Heart / highlight color */
+      --text:         #f5ede0;          /* Main text */
+      --text-muted:   #9a8878;          /* Subtle text */
+      --card-bg:      rgba(255,255,255,0.04);
+      --font-head:    'Playfair Display', serif;
+      --font-body:    'Cormorant Garamond', serif;
+    }
+
+    /* =============================================
+       RESET & BASE
+    ============================================= */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 18px;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* =============================================
+       FLOATING PARTICLES (background hearts)
+    ============================================= */
+    #particles { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+    .particle {
+      position: absolute;
+      font-size: 1rem;
+      opacity: 0;
+      animation: float-up linear infinite;
+      color: var(--rose);
+    }
+    @keyframes float-up {
+      0%   { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+      10%  { opacity: 0.4; }
+      90%  { opacity: 0.15; }
+      100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+    }
+
+    /* =============================================
+       SECTION LAYOUT HELPERS
+    ============================================= */
+    section { position: relative; z-index: 1; padding: 80px 20px; max-width: 860px; margin: 0 auto; }
+    .divider {
+      width: 80px; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      margin: 30px auto;
+    }
+    .section-label {
+      font-family: var(--font-body);
+      font-size: 0.75rem;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--gold);
+      text-align: center;
+    }
+
+    /* =============================================
+       HERO SECTION
+    ============================================= */
+    #hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 40px 20px;
+    }
+    #hero .year-badge {
+      font-size: 0.rem;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--gold);
+      border: 1px solid rgba(201,169,110,0.3);
+      padding: 6px 20px;
+      border-radius: 50px;
+      margin-bottom: 30px;
+      display: inline-block;
+    }
+    #hero h1 {
+      font-family: var(--font-head);
+      font-size: clamp(2.8rem, 8vw, 5.5rem);
+      font-weight: 400;
+      line-height: 1.1;
+      color: var(--gold-light);
+      margin-bottom: 10px;
+    }
+    #hero h1 em { font-style: italic; color: var(--rose); }
+    #hero .couple-names {
+      font-family: var(--font-head);
+      font-size: clamp(1.6rem, 4vw, 2.8rem);
+      font-style: italic;
+      color: var(--text);
+      margin: 18px 0 24px;
+    }
+    /* ✏️ Edit names below in the HTML */
+    #hero .tagline {
+      font-size: 1rem;
+      color: var(--text-muted);
+      max-width: 420px;
+      letter-spacing: 0.05em;
+    }
+    .heart-pulse {
+      font-size: 2.5rem;
+      display: block;
+      margin: 30px 0;
+      animation: pulse 1.6s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50%       { transform: scale(1.15); }
+    }
+
+    /* =============================================
+       COUNTDOWN SECTION
+    ============================================= */
+    #countdown { text-align: center; }
+    #countdown h2 { font-family: var(--font-head); font-size: 2rem; color: var(--gold-light); margin-bottom: 10px; }
+    .countdown-grid {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      margin-top: 36px;
+    }
+    .count-box {
+      background: var(--card-bg);
+      border: 1px solid rgba(201,169,110,0.2);
+      border-radius: 12px;
+      padding: 24px 28px;
+      min-width: 100px;
+      backdrop-filter: blur(6px);
+    }
+    .count-box .number {
+      font-family: var(--font-head);
+      font-size: 3rem;
+      font-weight: 700;
+      color: var(--gold);
+      line-height: 1;
+    }
+    .count-box .label {
+      font-size: 0.7rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-top: 6px;
+    }
+
+    /* =============================================
+       MESSAGE / LOVE NOTE SECTION
+    ============================================= */
+    #message { text-align: center; }
+    #message h2 { font-family: var(--font-head); font-size: 2rem; color: var(--gold-light); }
+    .love-note {
+      background: var(--card-bg);
+      border: 1px solid rgba(201,169,110,0.15);
+      border-radius: 16px;
+      padding: 40px 36px;
+      margin-top: 30px;
+      font-style: italic;
+      font-size: 1.15rem;
+      color: var(--text);
+      line-height: 1.9;
+      position: relative;
+    }
+    .love-note::before {
+      content: '\201C';
+      font-family: var(--font-head);
+      font-size: 5rem;
+      color: var(--gold);
+      opacity: 0.3;
+      position: absolute;
+      top: -10px;
+      left: 16px;
+      line-height: 1;
+    }
+    /* ✏️ Edit the message text in the HTML below */
+
+    /* =============================================
+       PHOTO GALLERY SECTION
+    ============================================= */
+    #gallery { text-align: center; }
+    #gallery h2 { font-family: var(--font-head); font-size: 2rem; color: var(--gold-light); }
+    .photo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 14px;
+      margin-top: 30px;
+    }
+    .photo-slot {
+      aspect-ratio: 1 / 1;
+      border-radius: 12px;
+      border: 1px dashed rgba(201,169,110,0.3);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      letter-spacing: 0.1em;
+      background: var(--card-bg);
+      overflow: hidden;
+      cursor: pointer;
+      transition: border-color 0.3s, transform 0.3s;
+    }
+    .photo-slot:hover { border-color: var(--gold); transform: scale(1.02); }
+    .photo-slot img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    /* ✏️ Replace placeholder slots with <img> tags or set img src in JS */
+    .photo-slot .icon { font-size: 2rem; opacity: 0.4; }
+
+    /* =============================================
+       TIMELINE SECTION
+    ============================================= */
+    #timeline { }
+    #timeline h2 { font-family: var(--font-head); font-size: 2rem; color: var(--gold-light); text-align: center; }
+    .timeline {
+      margin-top: 40px;
+      position: relative;
+      padding-left: 30px;
+    }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 10px;
+      top: 0; bottom: 0;
+      width: 1px;
+      background: linear-gradient(to bottom, transparent, var(--gold), transparent);
+    }
+    .tl-item {
+      position: relative;
+      margin-bottom: 36px;
+      padding-left: 24px;
+    }
+    .tl-item::before {
+      content: '';
+      position: absolute;
+      left: -24px;
+      top: 6px;
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: var(--gold);
+      box-shadow: 0 0 8px var(--gold);
+    }
+    .tl-year {
+      font-family: var(--font-head);
+      font-size: 0.8rem;
+      letter-spacing: 0.25em;
+      color: var(--gold);
+      margin-bottom: 4px;
+    }
+    .tl-title {
+      font-family: var(--font-head);
+      font-size: 1.2rem;
+      color: var(--gold-light);
+    }
+    .tl-desc {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+    }
+    /* ✏️ Add / edit timeline events in the HTML below */
+
+    /* =============================================
+       FOOTER
+    ============================================= */
+    footer {
+      text-align: center;
+      padding: 50px 20px 60px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      position: relative;
+      z-index: 1;
+    }
+    footer .big-heart { font-size: 2rem; display: block; margin-bottom: 10px; color: var(--rose); }
+    footer span { color: var(--gold); }
+
+    /* =============================================
+       ANIMATIONS ON SCROLL
+    ============================================= */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .fade-in.visible { opacity: 1; transform: none; }
+
+    /* =============================================
+       RESPONSIVE
+    ============================================= */
+    @media (max-width: 540px) {
+      .countdown-grid { gap: 12px; }
+      .count-box { padding: 18px 16px; min-width: 76px; }
+      .count-box .number { font-size: 2.2rem; }
+      .love-note { padding: 28px 20px; }
+    }
+      /* =============================================
+        VIDEO MODAL*/
+        .video-btn {
+  background: transparent;
+  border: 1px solid var(--gold);
+  color: var(--gold);
+  padding: 12px 24px;
+  border-radius: 30px;
+  cursor: pointer;
+  font-family: var(--font-body);
+  transition: 0.3s;
+}
+.video-btn:hover {
+  background: var(--gold);
+  color: black;
+}
+
+.video-modal {
+  display: none;
+  position: fixed;
+  z-index: 999;
+  inset: 0;
+  background: rgba(0,0,0,0.8);
+  justify-content: center;
+  align-items: center;
+}
+
+.video-content {
+  position: relative;
+  width: 80%;
+  max-width: 700px;
+}
+
+.video-content video {
+  width: 100%;
+  border-radius: 12px;
+}
+
+.close-btn {
+  position: absolute;
+  top: -30px;
+  right: 0;
+  font-size: 30px;
+  color: white;
+  cursor: pointer;
+}
+
+  </style>
+</head>
+<body>
+
+  <!-- ===== FLOATING HEARTS ===== -->
+  <div id="particles"></div>
+
+  <!-- ================================================
+       HERO SECTION
+       ✏️ Edit: year-badge, h1 title, couple-names, tagline
+  ================================================ -->
+  <section id="hero">
+    <span class="year-badge">21th Anniversary · 2005 – 2026</span>
+    <h1>Happy <em>Anniversary</em></h1>
+    <p class="couple-names">Papa &amp; Mumma</p>
+    <span class="heart-pulse">❤️</span>
+    <p class="tagline">29TH April 2026 - "Together through every season, forever hand in hand."</p>
+  </section>
+
+  <!-- ================================================
+       COUNTDOWN SECTION
+       ✏️ Edit TARGET_DATE in the <script> below
+  ================================================ -->
+  <section id="countdown" class="fade-in">
+    <p class="section-label">Counting down to the big day</p>
+    <div class="divider"></div>
+    <h2>The Celebration Begins In🎉</h2>
+    <div class="countdown-grid">
+      <div class="count-box"><div class="number" id="cd-days">--</div><div class="label">Days</div></div>
+      <div class="count-box"><div class="number" id="cd-hours">--</div><div class="label">Hours</div></div>
+      <div class="count-box"><div class="number" id="cd-min">--</div><div class="label">Minutes</div></div>
+      <div class="count-box"><div class="number" id="cd-sec">--</div><div class="label">Seconds</div></div>
+    </div>
+
+  </section>
+
+  <!-- ================================================
+       MESSAGE SECTION
+       ✏️ Edit the paragraph text inside .love-note
+  ================================================ -->
+  <section id="message" class="fade-in">
+    <p class="section-label">A note from the heart</p>
+    <div class="divider"></div>
+    <h2>Dear Mom &amp; Dad</h2>
+    <div class="love-note" id="loveMessage">
+  🎁 Come back on the main day for the message 🎁
+</div>
+  </section>
+  <!-- VIDEO SECTION -->
+   <div style="text-align:center; margin-top:30px;">
+  <button id="openVideoBtn" class="video-btn" disabled>
+  🔒 Video unlocks on April 29
+</button>
+</div>
+
+<div id="videoModal" class="video-modal">
+  <div class="video-content">
+    <span id="closeVideo" class="close-btn">&times;</span>
+    <video controls>
+      <source src="AnniversaryVideo.mp4" type="video/mp4">
+    </video>
+  </div>
+</div>
+
+  <!-- ================================================
+       PHOTO GALLERY SECTION
+  ================================================ -->
+  <section id="gallery" class="fade-in">
+    <p class="section-label">Memories we treasure</p>
+    <div class="divider"></div>
+    <h2>Our Favourite Moments</h2>
+    <div class="photo-grid">
+      <div class="photo-slot"><img src="photo5.jpg" alt="Honeymoon"></div>
+      <div class="photo-slot"><img src="photo4.jpg" alt="Honeymoon"></div>
+      <div class="photo-slot"><img src="photo3.jpg" alt="Honeymoon"></div>
+      <div class="photo-slot"><img src="photo2.jpg" alt="Honeymoon"></div>
+      <div class="photo-slot"><img src="photo1.jpg" alt="Honeymoon"></div>
+      <div class="photo-slot"><img src="photo8.jpg" alt="Honeymoon"></div>
+      <div class="photo-slot"><img src="photo7.jpg" alt="Honeymoon"></div>
+      <div class="photo-slot"><img src="photo6.jpg" alt="Honeymoon"></div>
+      <div class="photo-slot"><img src="photo9.jpg" alt="Honeymoon"></div>
+      <div class="photo-slot"><img src="photo10.jpg" alt="Honeymoon"></div>
+      <div class="photo-slot"><img src="photo11.jpg" alt="Honeymoon"></div>
+      <div class="photo-slot"><img src="photo12.jpg" alt="Honeymoon"></div>
+    </div>
+  </section>
+
+  <!-- ================================================
+       TIMELINE SECTION
+       ✏️ Edit years, titles, and descriptions.
+          Copy a .tl-item block to add more events.
+  ================================================ -->
+  <section id="timeline" class="fade-in">
+    <p class="section-label">Your journey through the years</p>
+    <div class="divider"></div>
+    <h2 style="text-align:center;">A Life Written Together</h2>
+    <div class="timeline">
+
+      <div class="tl-item">
+        <div class="tl-year"> Year 2005</div>
+        <div class="tl-title">You MARRIED 🥂</div>
+        <div class="tl-desc">You guys got married on April 29th, 2005 and have been together ever since❤️.</div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-year">Year 2006</div>
+        <div class="tl-title">Hritika born 🥰</div>
+        <div class="tl-desc">You guys brought me to this world on 16th February and I've been the most blessed child ever since😁!</div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-year"> Year 2013</div>
+        <div class="tl-title">Aabhas born👻</div>
+        <div class="tl-desc">You guys brought this pig to this world on 22nd March and he's been the most joyous addition to our family ever since 🐽!</div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-year">Year 2025</div>
+        <div class="tl-title"> Milestone set for 20 years</div>
+        <div class="tl-desc"> Another beautiful chapter of your story. 20 years together!</div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-year">Today</div>
+        <div class="tl-title">Still Going Strong 💛</div>
+        <div class="tl-desc">And the best chapters are still ahead🫶.</div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ================================================
+       FOOTER
+       ✏️ Edit names and year
+  ================================================ -->
+  <footer>
+    <span class="big-heart">💖</span>
+    Made with love for <span></span>Mom &amp; Dad By their Daughter </span> &nbsp;·&nbsp; <span>@2026</span>
+  </footer>
+
+
+  <script>
+    /* ====================================================
+       1. COUNTDOWN — Set your anniversary date here ✏️
+    ==================================================== */
+    const TARGET_DATE = new Date('2026-04-29T00:00:00'); // ✏️ Change this date
+
+    function updateCountdown() {
+      const now  = new Date();
+      const diff = TARGET_DATE - now;
+
+      if (diff <= 0) {
+        document.getElementById('cd-days').textContent  = '🎉';
+        document.getElementById('cd-hours').textContent = '🎉';
+        document.getElementById('cd-min').textContent   = '🎉';
+        document.getElementById('cd-sec').textContent   = '🎉';
+        return;
+      }
+
+      const d = Math.floor(diff / 86400000);
+      const h = Math.floor((diff % 86400000) / 3600000);
+      const m = Math.floor((diff % 3600000)  / 60000);
+      const s = Math.floor((diff % 60000)    / 1000);
+
+      document.getElementById('cd-days').textContent  = String(d).padStart(2,'0');
+      document.getElementById('cd-hours').textContent = String(h).padStart(2,'0');
+      document.getElementById('cd-min').textContent   = String(m).padStart(2,'0');
+      document.getElementById('cd-sec').textContent   = String(s).padStart(2,'0');
+    }
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
+
+
+    /* ====================================================
+       2. FLOATING HEARTS — adjust count & symbols ✏️
+    ==================================================== */
+    const SYMBOLS = ['❤️','💛','🌹','✨','💕','I love you'];  // ✏️ Add/remove symbols
+    const PARTICLE_COUNT = 18;                      // ✏️ More = denser
+
+    const container = document.getElementById('particles');
+    for (let i = 0; i < PARTICLE_COUNT; i++) {
+      const el = document.createElement('span');
+      el.className = 'particle';
+      el.textContent = SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)];
+      el.style.left     = Math.random() * 100 + 'vw';
+      el.style.fontSize = (0.7 + Math.random() * 1.2) + 'rem';
+      el.style.animationDuration  = (8 + Math.random() * 14) + 's';
+      el.style.animationDelay     = (Math.random() * 10) + 's';
+      container.appendChild(el);
+    }
+
+
+    /* ====================================================
+       3. SCROLL FADE-IN — no changes needed usually
+    ==================================================== */
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.15 });
+
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+    /* ====================================================
+       4. VIDEO MODAL — set your video src in the HTML*/
+    const openBtn = document.getElementById("openVideoBtn");
+const modal = document.getElementById("videoModal");
+const closeBtn = document.getElementById("closeVideo");
+
+openBtn.onclick = () => {
+  modal.style.display = "flex";
+};
+
+closeBtn.onclick = () => {
+  modal.style.display = "none";
+};
+
+window.onclick = (e) => {
+  if (e.target === modal) {
+    modal.style.display = "none";
+  }
+};
+
+<!-- message -->
+const REAL_MESSAGE = `
+Dear Papa & Mumma,
+
+On this beautiful day, we want you to know how deeply grateful we are — not just for everything you've given us, but for the way you've given it. With love, patience, and quiet sacrifice.
+
+You worked tirelessly so we never had to worry. You stayed up late when we were unwell, cheered loudest at every small win, and held us together when things felt hard. You taught us what it means to be kind, to be strong, and to never give up.
+
+But more than anything, the greatest gift you ever gave us was letting us grow up watching the two of you — your love, your partnership, your respect for each other. It showed us what a beautiful life truly looks like.
+
+21 years of togetherness, and you are still each other's favourite person. That is something truly rare and precious.
+
+Thank you, Papa & Mumma — for every meal, every prayer, every hug, and every moment you chose us. We are who we are because of you both.
+
+We love you more than words can ever say. 💛
+
+With all our love,
+Your Son and Daughter ❤️`;
+
+const UNLOCK_DATE = new Date('2026-04-29T00:00:00');
+
+function checkUnlocks() {
+  const now = new Date();
+
+  if (now >= UNLOCK_DATE) {
+    // 🔓 Unlock message
+    const msgBox = document.getElementById("loveMessage");
+    msgBox.innerHTML = REAL_MESSAGE;
+
+    // 🔓 Unlock video button
+    const btn = document.getElementById("openVideoBtn");
+    btn.disabled = false;
+    btn.textContent = "🎥 Watch Special Video";
+
+  }
+}
+
+// run once + every second
+checkUnlocks();
+setInterval(checkUnlocks, 1000);
+
+ </script>
+
+</body>
+</html>

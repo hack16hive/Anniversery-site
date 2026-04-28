@@ -665,8 +665,18 @@ function launchConfetti() {
       p.speedY += p.gravity;
 
       ctx.beginPath();
-      ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-      ctx.fill();
+ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+
+const colors = [
+  "#FFD700",   // Gold
+  "#FFC300",   // Bright yellow
+  "#FFEA00",   // Lemon yellow
+  "#F4C430",   // Royal gold
+  "#E8D5B0"    // Soft champagne
+];
+
+ctx.fillStyle = colors[Math.floor(Math.random() * colors.length)];
+ctx.fill();
 
       if (p.y > canvas.height) particles.splice(i, 1);
     });
